@@ -621,3 +621,7 @@ def get_upstream_version(package):
         return None
 
     return apt_pkg.upstream_version(pkg.current_ver.ver_str)
+
+
+def get_distrib_codename():
+    return lsb_release()['DISTRIB_CODENAME'].lower()

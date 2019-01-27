@@ -717,6 +717,11 @@ class AptTests(TestCase):
         self.assertEqual(fetch.get_upstream_version('emacs'), None)
         self.assertEqual(fetch.get_upstream_version('unknown'), None)
 
+    @patch('charmhelpers.core.host_factory.ubuntu.lsb_release')
+    def test_get_distrib_codename(self, lsb_release):
+        lsb_release.return_value = {'DISTRIB_CODENAME', 'bionic'}
+        self.assertEqual(fetch.get_distrib_codename(), 'bionic')
+
     @patch('charmhelpers.fetch.ubuntu._run_apt_command')
     def test_apt_autoremove_fatal(self, run_apt_command):
         fetch.apt_autoremove(purge=True, fatal=True)
