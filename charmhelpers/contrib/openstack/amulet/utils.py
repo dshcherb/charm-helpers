@@ -96,8 +96,8 @@ class OpenStackAmuletUtils(AmuletUtils):
                 'url': self.valid_url,
                 'interface': self.not_null,
                 'service_id': expected['service_id']}
-        return validation_function(endpoints, admin_port, internal_port,
-                                   public_port, expected)
+            return validation_function(endpoints, admin_port, internal_port,
+                                       public_port, expected)
 
     def validate_v2_endpoint_data(self, endpoints, admin_port, internal_port,
                                   public_port, expected):
