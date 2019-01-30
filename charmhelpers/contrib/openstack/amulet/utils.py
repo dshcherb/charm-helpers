@@ -88,16 +88,16 @@ class OpenStackAmuletUtils(AmuletUtils):
         validation_function = self.validate_v2_endpoint_data
         xenial_queens = OPENSTACK_RELEASES_PAIRS.index('xenial_queens')
         if openstack_release and openstack_release >= xenial_queens:
-                validation_function = self.validate_v3_endpoint_data
-                expected = {
-                    'id': expected['id'],
-                    'region': expected['region'],
-                    'region_id': 'RegionOne',
-                    'url': self.valid_url,
-                    'interface': self.not_null,
-                    'service_id': expected['service_id']}
-        return validation_function(endpoints, admin_port, internal_port,
-                                   public_port, expected)
+            validation_function = self.validate_v3_endpoint_data
+            expected = {
+                'id': expected['id'],
+                'region': expected['region'],
+                'region_id': 'RegionOne',
+                'url': self.valid_url,
+                'interface': self.not_null,
+                'service_id': expected['service_id']}
+            return validation_function(endpoints, admin_port, internal_port,
+                                       public_port, expected)
 
     def validate_v2_endpoint_data(self, endpoints, admin_port, internal_port,
                                   public_port, expected):
