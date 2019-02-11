@@ -1022,7 +1022,7 @@ class AptTests(TestCase):
                                  any_order=True)
         self.assertEqual(expected_settings, proxy_settings)
         # Verify that we logged a warning about the cidr in NO_PROXY.
-        faux_log.assert_called_with(fetch.CIDR_WARNING, level=fetch.WARNING)
+        faux_log.assert_called_with(fetch.RANGE_WARNING, level=fetch.WARNING)
 
     @patch.object(os, 'getenv')
     def test_env_proxy_settings_legacy_https(self, get_env):
@@ -1104,16 +1104,24 @@ class AptTests(TestCase):
                                  any_order=True)
         self.assertEqual(expected_settings, proxy_settings)
 
-    def test_cidr_re(self):
+    def test_contains_addr_range(self):
         # Contains cidr
-        self.assertTrue(re.match(fetch.CONTAINS_CIDR, "192.168.1/20"))
-        self.assertTrue(re.match(fetch.CONTAINS_CIDR, "192.168.0/24"))
-        self.assertTrue(re.match(fetch.CONTAINS_CIDR,
-                                 "10.40.50.1,192.168.1/20,10.56.78.9"))
-        self.assertTrue(re.match(fetch.CONTAINS_CIDR, "192.168.22/24"))
-        self.assertTrue(re.match(fetch.CONTAINS_CIDR, "2001:db8::/32"))
+        self.assertTrue(fetch._contains_range("192.168.1/20"))
+        self.assertTrue(fetch._contains_range("192.168.0/24"))
+        self.assertTrue(
+            fetch._contains_range("10.40.50.1,192.168.1/20,10.56.78.9"))
+        self.assertTrue(fetch._contains_range("192.168.22/24"))
+        self.assertTrue(fetch._contains_range("2001:db8::/32"))
+        self.assertTrue(fetch._contains_range("*.foo.com"))
+        self.assertTrue(fetch._contains_range(".foo.com"))
+        self.assertTrue(
+            fetch._contains_range("192.168.1.20,.foo.com"))
+        self.assertTrue(
+            fetch._contains_range("192.168.1.20,  .foo.com"))
+        self.assertTrue(
+            fetch._contains_range("192.168.1.20,*.foo.com"))
 
         # Doesn't contain cidr
-        self.assertFalse(re.match(fetch.CONTAINS_CIDR, "192.168.1"))
-        self.assertFalse(re.match(fetch.CONTAINS_CIDR, "192.168.145"))
-        self.assertFalse(re.match(fetch.CONTAINS_CIDR, "192.16.14"))
+        self.assertFalse(fetch._contains_range("192.168.1"))
+        self.assertFalse(fetch._contains_range("192.168.145"))
+        self.assertFalse(fetch._contains_range("192.16.14"))
